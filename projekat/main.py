@@ -1,24 +1,15 @@
 from tkinter import *
 from tkinter import messagebox
-from Projekatoop.projekat.pacijent.pacijent import Pacijent,Lekar
 from Projekatoop.projekat.pacijent.LekarIO import ucitaj_lekara,sacuvaj_lekara
 from Projekatoop.projekat.pacijent.pacijentIO import ucitaj_pacijente,sacuvaj_pacijente
 from Projekatoop.projekat.lek.lekIO import ucitaj_lek,sacuvaj_lek
 from Projekatoop.projekat.Recept.receptIO import ucitaj_recepte,sacuvaj_recepte
-import json
-from types import SimpleNamespace
+
 
 def main():
     root = Tk()
     app = glavni_prozor(root)
     root.mainloop()
-
-def ocisti_labele(self):
-    self.__sifra_labela["text"] = ""
-    self.__naziv_labela["text"] = ""
-    self.__cena_labela["text"] = ""
-    self.__proizvodjac_labela["text"] = ""
-
 
 class glavni_prozor():
 
@@ -83,51 +74,53 @@ class glavni_prozor():
 
 class prozor_pacijent():
 
-    def prozor_za_dodavanje(self,ime, prezime, jmbg, datum, lbo):
-        self.prozor=Tk()
-        prozor=self.prozor
-
-        Ime= Label(self.prozor, text='Unesite ime novog pacijenta', font=('bold'), pady=5)
-        Ime.grid(row=0, column=0, sticky=W)
-        self.Novoime = Entry(prozor, bg='whitesmoke')
-        self.Novoime.grid(row=0, column=1)
-        self.Novoime.insert(-1, ime)
-
-        Prezime = Label(prozor, text='Unesite prezime pacijenta', font=('bold'))
-        Prezime.grid(row=2, column=0, sticky=W)
-        self.Novoprezime = Entry(prozor, bg='whitesmoke')
-        self.Novoprezime.grid(row=2, column=1)
-        self.Novoprezime.insert(-1, prezime)
-
-        Datum= Label(prozor, text='Datum rodjenja', font=('bold'))
-        Datum.grid(row=3, column=0, sticky=W)
-        self.Novidatum = Entry(prozor, bg='whitesmoke')
-        self.Novidatum.grid(row=3, column=1)
-        self.Novidatum.insert(-1, datum)
-
-        JMBG= Label(prozor, text='JMBG', font=('bold'))
-        JMBG.grid(row=4, column=0, sticky=W)
-        self.NoviJMBG= Entry(prozor, bg='whitesmoke')
-        self.NoviJMBG.grid(row=4, column=1)
-        self.NoviJMBG.insert(-1, jmbg)
-
-        LBO= Label(prozor, text='LBO', font=('bold'))
-        LBO.grid(row=5, column=0, sticky=W)
-        self.NoviLBO = Entry(prozor, bg='whitesmoke')
-        self.NoviLBO.grid(row=5, column=1)
-        self.NoviLBO.insert(-1, lbo)
-
-        self.prozor.geometry('1000x600')
-        self.prozor.title("Dodavanje")
-        return self.prozor
-
     def dodaj_prozor(self):
-        self.prozor = self.prozor_za_dodavanje("", "", "", "","")
-        self.dodaj_dugme = Button(self.prozor, text='Dodaj', width=12, command=self.dodaj)
-        self.dodaj_dugme.grid(row=7, column=0, pady=20)
+        self.prozor = Tk()
+        prozor = self.prozor
+        prozor.title("Dodavanje pacijenta")
+        prozor.geometry("500x400")
+        self.okvir = Frame(prozor)
+        self.okvir.pack()
 
-        izlaz_dugme = Button(self.prozor, text='Izlaz', bg='#d4575b', fg='white', width=12, command=self.prozor.destroy)
-        izlaz_dugme.grid(row=7, column=1, pady=20)
+        unosFrame = Frame(prozor, bd=1, relief="solid", bg="LightBlue1")
+        unosFrame.place(x=0, y=0, width=500, height=400)
+
+        self.Ime= Label(unosFrame, text='Ime:', font=('bold'))
+        self.Ime.place(x=10,y=30)
+        self.Novoime = Entry(unosFrame, bg='azure',font=("arial",12))
+        self.Novoime.place(x=140,y=30)
+
+
+        self.Prezime = Label(unosFrame, text='Prezime:', font=('bold'))
+        self.Prezime.place(x=10,y=60)
+        self.Novoprezime = Entry(unosFrame,  bg='azure',font=("arial",12))
+        self.Novoprezime.place(x=140,y=60)
+
+
+        self.Datum= Label(unosFrame, text='Datum rodjenja:', font=('bold'))
+        self.Datum.place(x=10,y=90)
+        self.Novidatum = Entry(unosFrame,  bg='azure',font=("arial",12))
+        self.Novidatum.place(x=140,y=90)
+
+
+        self.JMBG= Label(unosFrame, text='JMBG:', font=('bold'))
+        self.JMBG.place(x=10,y=120)
+        self.NoviJMBG= Entry(unosFrame,  bg='azure',font=("arial",12))
+        self.NoviJMBG.place(x=140,y=120)
+
+
+        self.LBO= Label(unosFrame, text='LBO:', font=('bold'))
+        self.LBO.place(x=10,y=150)
+        self.NoviLBO = Entry(unosFrame,  bg='azure',font=("arial",12))
+        self.NoviLBO.place(x=140,y=150)
+
+
+
+        self.dodaj_dugme = Button(unosFrame, text='Dodaj', width=12, command=self.dodaj)
+        self.dodaj_dugme.place(x=350,y=80)
+
+        self.izlaz_dugme = Button(unosFrame, text='Izlaz', width=12, command=self.prozor.destroy)
+        self.izlaz_dugme.place(x=190,y=230)
 
 
     def dodaj(self):
@@ -272,12 +265,13 @@ class prozor_pacijent():
 
             for t in pacijent:
                 if t["JMBG"]==jmbgzabrisanje:
-                    receptpaczabrisanje=t["ReceptPac"]
+                    if 'ReceptPac' in t:
+                        receptpaczabrisanje=t["ReceptPac"]
 
-                    for r in recepti:
-                        if r["ReceptPac"]==receptpaczabrisanje:
+                        for r in recepti:
+                            if r["ReceptPac"]==receptpaczabrisanje:
 
-                            recepti.remove(r)
+                                recepti.remove(r)
             sacuvaj_recepte(recepti)
             for j in pacijent:
                 if j["JMBG"] == jmbgzabrisanje:
@@ -337,8 +331,6 @@ class prozor_pacijent():
                         "JMBG": jmbg,
                         "LBO": lbo
                     }
-
-
 
         for i in pacijent:
             if str(i["JMBG"]) == jmbg:
@@ -466,6 +458,8 @@ class prozor_pacijent():
         test=[]
         test.append(self.trenutni_pacijent)
         trenutnijmbg=0
+        brojrecepta=0
+        provera=0
         for i in test:
             trenutnijmbg=i["JMBG"]
         for j in pacijent:
@@ -483,8 +477,7 @@ class prozor_pacijent():
 
                                                 self.listbox_recepti.insert(-1, str(l["JKL"])+", "+l["Naziv"]+", "+m["Ime"]+" "+m["Prezime"])
 
-
-
+                                                provera=provera+1
 
 
 
@@ -494,7 +487,11 @@ class prozor_pacijent():
                     self.izlaz()
                     self.izlaz3()
 
-
+        print(provera)
+        if 0==provera:
+            messagebox.showwarning("Greska","Ovaj pacijent trenutno nema recepte!")
+            self.izlaz()
+            self.izlaz3()
 
     def dozvola(self, event):
 
@@ -566,52 +563,53 @@ class prozor_pacijent():
 
 
 class prozor_lekari:
-    def prozor_za_dodavanje_lekar(self,ime, prezime, jmbg, datum, lbo):
-        self.prozorlekar=Tk()
-        prozorlekar=self.prozorlekar
-
-
-        lekarIme= Label(self.prozorlekar, text='Unesite ime novog pacijenta', font=('bold'), pady=5)
-        lekarIme.grid(row=0, column=0, sticky=W)
-        self.lekarNovoime = Entry(prozorlekar, bg='whitesmoke')
-        self.lekarNovoime.grid(row=0, column=1)
-        self.lekarNovoime.insert(-1, ime)
-
-        lekarPrezime = Label(prozorlekar, text='Unesite prezime pacijenta', font=('bold'))
-        lekarPrezime.grid(row=2, column=0, sticky=W)
-        self.lekarNovoprezime = Entry(prozorlekar, bg='whitesmoke')
-        self.lekarNovoprezime.grid(row=2, column=1)
-        self.lekarNovoprezime.insert(-1, prezime)
-
-        lekarDatum= Label(prozorlekar, text='Datum rodjenja', font=('bold'))
-        lekarDatum.grid(row=3, column=0, sticky=W)
-        self.lekarNovidatum = Entry(prozorlekar, bg='whitesmoke')
-        self.lekarNovidatum.grid(row=3, column=1)
-        self.lekarNovidatum.insert(-1, datum)
-
-        lekarJMBG= Label(prozorlekar, text='JMBG', font=('bold'))
-        lekarJMBG.grid(row=4, column=0, sticky=W)
-        self.lekarNoviJMBG= Entry(prozorlekar, bg='whitesmoke')
-        self.lekarNoviJMBG.grid(row=4, column=1)
-        self.lekarNoviJMBG.insert(-1, jmbg)
-
-        lekarLBO= Label(prozorlekar, text='Specijalizacija', font=('bold'))
-        lekarLBO.grid(row=5, column=0, sticky=W)
-        self.lekarNoviLBO = Entry(prozorlekar, bg='whitesmoke')
-        self.lekarNoviLBO.grid(row=5, column=1)
-        self.lekarNoviLBO.insert(-1, lbo)
-
-        self.prozorlekar.geometry('1000x600')
-        self.prozorlekar.title("Dodavanje")
-        return self.prozorlekar
-
     def dodaj_prozor(self):
-        self.prozorlekar = self.prozor_za_dodavanje_lekar("", "", "", "","")
-        self.dodaj_dugme = Button(self.prozorlekar, text='Dodaj', width=12, command=self.dodaj)
-        self.dodaj_dugme.grid(row=7, column=0, pady=20)
+        self.prozor = Tk()
+        prozor = self.prozor
+        prozor.title("Dodavanje lekara")
+        prozor.geometry("500x400")
+        self.okvir = Frame(prozor)
+        self.okvir.pack()
 
-        izlaz_dugme = Button(self.prozorlekar, text='Izlaz', bg='#d4575b', fg='white', width=12, command=self.prozorlekar.destroy)
-        izlaz_dugme.grid(row=7, column=1, pady=20)
+        unosFrame = Frame(prozor, bd=1, relief="solid", bg="LightBlue1")
+        unosFrame.place(x=0, y=0, width=500, height=400)
+
+        self.lekarIme= Label(unosFrame, text='Ime:', font=('bold'))
+        self.lekarIme.place(x=10,y=30)
+        self.lekarNovoime = Entry(unosFrame, bg='azure',font=("arial",12))
+        self.lekarNovoime.place(x=140,y=30)
+
+
+        self.lekarPrezime = Label(unosFrame, text='Prezime:', font=('bold'))
+        self.lekarPrezime.place(x=10,y=60)
+        self.lekarNovoprezime = Entry(unosFrame,  bg='azure',font=("arial",12))
+        self.lekarNovoprezime.place(x=140,y=60)
+
+
+        self.lekarDatum= Label(unosFrame, text='Datum rodjenja:', font=('bold'))
+        self.lekarDatum.place(x=10,y=90)
+        self.lekarNovidatum = Entry(unosFrame,  bg='azure',font=("arial",12))
+        self.lekarNovidatum.place(x=140,y=90)
+
+
+        self.lekarJMBG= Label(unosFrame, text='JMBG:', font=('bold'))
+        self.lekarJMBG.place(x=10,y=120)
+        self.lekarNoviJMBG= Entry(unosFrame,  bg='azure',font=("arial",12))
+        self.lekarNoviJMBG.place(x=140,y=120)
+
+
+        self.lekarLBO= Label(unosFrame, text='Specijalizacija:', font=('bold'))
+        self.lekarLBO.place(x=10,y=150)
+        self.lekarNoviLBO = Entry(unosFrame,  bg='azure',font=("arial",12))
+        self.lekarNoviLBO.place(x=140,y=150)
+
+
+
+        self.dodaj_dugme = Button(unosFrame, text='Dodaj', width=12, command=self.dodaj)
+        self.dodaj_dugme.place(x=350,y=80)
+
+        self.izlaz_dugme = Button(unosFrame, text='Izlaz', width=12, command=self.prozor.destroy)
+        self.izlaz_dugme.place(x=190,y=230)
 
 
     def dodaj(self):
@@ -946,6 +944,7 @@ class prozor_lekari:
         test=[]
         test.append(self.trenutni_lekar)
         trenutnijmbg=0
+        provera=0
         for i in test:
             trenutnijmbg=i["JMBG"]
         for j in lekar:
@@ -959,13 +958,18 @@ class prozor_lekari:
 
                                             self.listbox_recepti.insert(-1, str(l["JKL"])+", "+l["Naziv"]+", "+l["Proizvodjac"])
 
-
+                                            provera=1
 
                 else:
                     messagebox.showwarning("Greska", "Lekar trenutno nema izdate recepte!")
                     self.izlaz2()
                     self.izlaz()
                     self.izlaz3()
+        if provera==0:
+            messagebox.showwarning("Greska","Lekar tenutno nema izdate receptne!")
+            self.izlaz()
+
+            self.izlaz3()
     def dozvola(self, event):
 
             self.dodaj_dugme4["state"] = "active"
@@ -1031,73 +1035,75 @@ class prozor_lekari:
                 self.azuriraj_lekara()
 
 class prozor_lekovi:
-    def prozor_za_dodavanje_leka(self,ime, prezime, jmbg, datum):
-        self.prozorlekar=Tk()
-        prozorlekar=self.prozorlekar
-
-
-        lekarIme= Label(self.prozorlekar, text='Naziv', font=('bold'), pady=5)
-        lekarIme.grid(row=0, column=0, sticky=W)
-        self.lekarNovoime = Entry(prozorlekar, bg='whitesmoke')
-        self.lekarNovoime.grid(row=0, column=1)
-        self.lekarNovoime.insert(-1, ime)
-
-        lekarPrezime = Label(prozorlekar, text='Proizvodjac', font=('bold'))
-        lekarPrezime.grid(row=2, column=0, sticky=W)
-        self.lekarNovoprezime = Entry(prozorlekar, bg='whitesmoke')
-        self.lekarNovoprezime.grid(row=2, column=1)
-        self.lekarNovoprezime.insert(-1, prezime)
-
-        lekarDatum= Label(prozorlekar, text='Tip leka', font=('bold'))
-        lekarDatum.grid(row=3, column=0, sticky=W)
-        self.lekarNovidatum = Entry(prozorlekar, bg='whitesmoke')
-        self.lekarNovidatum.grid(row=3, column=1)
-        self.lekarNovidatum.insert(-1, datum)
-
-        lekarJMBG= Label(prozorlekar, text='JKL', font=('bold'))
-        lekarJMBG.grid(row=4, column=0, sticky=W)
-        self.lekarNoviJMBG= Entry(prozorlekar, bg='whitesmoke')
-        self.lekarNoviJMBG.grid(row=4, column=1)
-        self.lekarNoviJMBG.insert(-1, jmbg)
-
-
-
-        self.prozorlekar.geometry('1000x600')
-        self.prozorlekar.title("Dodavanje")
-        return self.prozorlekar
-
     def dodaj_prozor(self):
-        self.prozorlekar = self.prozor_za_dodavanje_leka("", "", "", "")
-        self.dodaj_dugme = Button(self.prozorlekar, text='Dodaj', width=12, command=self.dodaj)
-        self.dodaj_dugme.grid(row=7, column=0, pady=20)
+        self.prozorlek = Tk()
+        prozorlek = self.prozorlek
+        prozorlek.title("Dodavanje leka")
+        prozorlek.geometry("500x400")
+        self.okvir = Frame(prozorlek)
+        self.okvir.pack()
 
-        izlaz_dugme = Button(self.prozorlekar, text='Izlaz', bg='#d4575b', fg='white', width=12, command=self.prozorlekar.destroy)
-        izlaz_dugme.grid(row=7, column=1, pady=20)
+        unosFrame = Frame(prozorlek, bd=1, relief="solid", bg="LightBlue1")
+        unosFrame.place(x=0, y=0, width=500, height=400)
+
+        self.Naziv= Label(unosFrame, text='Naziv:', font=('bold'))
+        self.Naziv.place(x=10,y=30)
+        self.NoviNaziv = Entry(unosFrame, bg='azure',font=("arial",12))
+        self.NoviNaziv.place(x=140,y=30)
+
+
+        self.Proizvodjac = Label(unosFrame, text='Proizvodjac:', font=('bold'))
+        self.Proizvodjac.place(x=10,y=60)
+        self.NoviProizvodjac = Entry(unosFrame,  bg='azure',font=("arial",12))
+        self.NoviProizvodjac.place(x=140,y=60)
+
+
+        self.Tip= Label(unosFrame, text='Tip leka:', font=('bold'))
+        self.Tip.place(x=10,y=90)
+        self.NoviTip = Entry(unosFrame,  bg='azure',font=("arial",12))
+        self.NoviTip.place(x=140,y=90)
+
+
+        self.JKL= Label(unosFrame, text='JKL:', font=('bold'))
+        self.JKL.place(x=10,y=120)
+        self.NoviJKL= Entry(unosFrame,  bg='azure',font=("arial",12))
+        self.NoviJKL.place(x=140,y=120)
+
+
+
+
+
+
+        self.dodaj_dugme = Button(unosFrame, text='Dodaj', width=12, command=self.dodaj)
+        self.dodaj_dugme.place(x=350,y=80)
+
+        self.izlaz_dugme = Button(unosFrame, text='Izlaz', width=12, command=self.prozorlek.destroy)
+        self.izlaz_dugme.place(x=190,y=230)
 
 
     def dodaj(self):
 
-        JMBG=self.lekarNoviJMBG.get()
-        datum=self.lekarNovidatum.get()
-        prezime=self.lekarNovoprezime.get()
-        ime=self.lekarNovoime.get()
+        JKL=self.NoviJKL.get()
+        tip=self.NoviTip.get()
+        proizvodjac=self.NoviProizvodjac.get()
+        naziv=self.NoviNaziv.get()
         lekar=ucitaj_lek()
 
-        if not len(JMBG) == 7 :
+        if not len(JKL) == 7 :
             messagebox.showwarning("Greska","JKL mora imati 7 cifara i mora sadrzati iskljucivo sele brojeve!")
-            self.prozorlekar.destroy()
-        elif len(prezime)<2 :
+            self.prozorlek.destroy()
+        elif len(proizvodjac)<2 :
             messagebox.showwarning("Greska","Proizvodjac mora imati vise od 2 slova i mora sadrzati slova!")
-            self.prozorlekar.destroy()
-        elif len(ime)<2 :
+            self.prozorlek.destroy()
+        elif len(naziv)<2 :
             messagebox.showwarning("Greska","Naziv mora imati vise od 2 slova i mora sadrzati slova!")
-            self.prozorlekar.destroy()
+            self.prozorlek.destroy()
         else:
                 novilekar={
-                    "Naziv" : ime,
-                    "JKL" : JMBG,
-                    "Proizvodjac" : prezime,
-                    "Tip leka" :datum
+                    "Naziv" : naziv,
+                    "JKL" : JKL,
+                    "Proizvodjac" : proizvodjac,
+                    "Tip leka" :tip
 
 
 
@@ -1456,7 +1462,7 @@ class prozor_recepti:
                     brojac=brojac+1
         if brojac==0:
             messagebox.showwarning("Greska","Ovaj pacijent jos uvek nema nijedan recpet!")
-            self.izlaz()
+
 
         recepti = ucitaj_recepte()
         lekar=ucitaj_lekara()
@@ -1824,12 +1830,299 @@ class prozor_recepti:
     def dozvola(self,event):
 
             self.dodaj_dugme4["state"] = "active"
-
+            self.dodaj_dugme6['state'] = 'active'
             self.dodaj_dugme3['state'] = 'active'
+    def cuvanje_izmene(self):
+        recept=ucitaj_recepte()
+        for j in recept:
+            if j["Izvestaj"] == self.Izvestaj and j["Datum izdavanja"] == self.Datum:
+                recept.remove(j)
+        print(recept)
+        sacuvaj_recepte(recept)
+        pac = ucitaj_pacijente()
+        pacijent = self.listap
+        lekar = self.listal
+        lek = self.listalek
+        kolicina = self.kolicina
+        izvestaj = self.labela5entry.get()
+        datumdanas = str(date.today())
+        maxpac = 1
+        brojac = 0
+        for p in pacijent:
+            for k in p:
+
+                if "ReceptPac" == k:
+                    receptpac = p["ReceptPac"]
+
+                    brojac = 1
+
+
+                else:
+
+                    for i in pac:
+                        for t in i:
+                            if t == "ReceptPac":
+                                if i["ReceptPac"] >= maxpac:
+                                    maxpac = i["ReceptPac"]
+                    receptpac = maxpac + 1
+
+                    ime = p["Ime"]
+                    prezime = p["Prezime"]
+                    datum = p["Datum"]
+                    jmbg = p["JMBG"]
+                    lbo = p["LBO"]
+                    korisnik = {
+                        "Ime": ime,
+                        "Prezime": prezime,
+                        "Datum": datum,
+                        "JMBG": jmbg,
+                        "LBO": lbo,
+                        "ReceptPac": receptpac
+                    }
+        if brojac == 0:
+            for l in pac:
+                if jmbg == l["JMBG"]:
+                    pac.remove(l)
+            pac.append(korisnik)
+            sacuvaj_pacijente(pac)
+
+        maxlekar = 1
+        brojac2 = 0
+        leka = ucitaj_lekara()
+        for p1 in lekar:
+            for k1 in p1:
+                if "ReceptLekar" in k1:
+                    receptlekar = p1["ReceptLekar"]
+                    brojac2 = 1
+
+                else:
+                    for i1 in leka:
+                        for t1 in i1:
+                            if t1 == "ReceptLekar":
+                                if i1["ReceptLekar"] >= maxlekar:
+                                    maxlekar = i1["ReceptLekar"]
+                    receptlekar = maxlekar + 1
+
+                    ime1 = p1["Ime"]
+                    prezime1 = p1["Prezime"]
+                    datum1 = p1["Datum"]
+                    jmbg1 = p1["JMBG"]
+                    lbo1 = p1["Specijalizacija"]
+                    korisnik1 = {
+                        "Ime": ime1,
+                        "Prezime": prezime1,
+                        "Datum": datum1,
+                        "JMBG": jmbg1,
+                        "Specijalizacija": lbo1,
+                        "ReceptLekar": receptlekar
+                    }
+        if brojac2 == 0:
+            for l1 in leka:
+                if jmbg1 == l1["JMBG"]:
+                    leka.remove(l1)
+            leka.append(korisnik1)
+            sacuvaj_lekara(leka)
+        print(receptlekar)
+        maxlek = 1
+        brojac = 0
+        pac = ucitaj_lek()
+        for p in lek:
+            for k in p:
+
+                if "ReceptLek" == k:
+                    receptlek = p["ReceptLek"]
+
+                    brojac = 1
+
+
+                else:
+
+                    for i in pac:
+                        for t in i:
+                            if t == "ReceptLek":
+                                if i["ReceptLek"] >= maxlek:
+                                    maxlek = i["ReceptLek"]
+                    receptlek = maxlek + 1
+
+                    ime = p["Naziv"]
+                    prezime = p["Proizvodjac"]
+                    datum = p["Tip leka"]
+                    jmbg = p["JKL"]
+
+                    korisnik = {
+                        "Naziv": ime,
+                        "Proizvodjac": prezime,
+                        "Tip leka": datum,
+                        "JKL": jmbg,
+
+                        "ReceptLek": receptlek
+                    }
+        if brojac == 0:
+            for l in pac:
+                if jmbg == l["JKL"]:
+                    pac.remove(l)
+            pac.append(korisnik)
+            sacuvaj_lek(pac)
+        recept = {
+            "ReceptPac": receptpac,
+            "ReceptLekar": receptlekar,
+            "ReceptLek": receptlek,
+            "Datum izdavanja": datumdanas,
+            "Kolicina": kolicina,
+            "Izvestaj": izvestaj
+        }
+        recepti = ucitaj_recepte()
+        recepti.append(recept)
+        sacuvaj_recepte(recepti)
+
+        trenutni = self.combobox.current()
+        brojac = 0
+        for i in ucitaj_pacijente():
+            if brojac == trenutni:
+                self.trenutnipacijent = i
+                break
+
+            else:
+                brojac = brojac + 1
+        lista = []
+        lista.append(self.trenutnipacijent)
+        brojac = 0
+        for j in lista:
+            for m in j:
+                if m == 'ReceptPac':
+                    receptpacijent = j["ReceptPac"]
+                    brojac = brojac + 1
+        if brojac == 0:
+            messagebox.showwarning("Greska", "Ovaj pacijent jos uvek nema nijedan recpet!")
+
+        recepti = ucitaj_recepte()
+        lekar = ucitaj_lekara()
+        pacijent = ucitaj_pacijente()
+        lista2 = []
+        lista2.append(recepti)
+        self.trenutnirecept = []
+        self.prikaz_listbox.delete(0, 'end')
+        for l in recepti:
+            if l["ReceptPac"] == receptpacijent:
+                recept = {
+                    "ReceptPac": l["ReceptPac"],
+                    "Datum izdavanja": l["Datum izdavanja"],
+                    "Izvestaj": l["Izvestaj"],
+                    "ReceptLekar": l["ReceptLekar"],
+                    "ReceptLek": l["ReceptLek"],
+                    "Kolicina": l["Kolicina"]
+                }
+                self.trenutnirecept.append(recept)
+
+                self.prikaz_listbox.insert('end', l)
+
+    def izmena_recepta(self):
+        self.trenutni_recept = self.trenutnirecept[self.prikaz_listbox.curselection()[0]]
+        print(self.trenutni_recept)
+        lista = []
+        lista.append(self.trenutni_recept)
+
+        for i in lista:
+            print(i["ReceptPac"])
+            receptpac = i["ReceptPac"]
+            receptlekar = i["ReceptLekar"]
+            receptlek = i["ReceptLek"]
+            self.Datum = i["Datum izdavanja"]
+            self.Izvestaj = i["Izvestaj"]
+            Kolicina = i["Kolicina"]
+
+
+        pozicijapacijenta=1
+        for pacijent in ucitaj_pacijente():
+
+            if 'ReceptPac' in pacijent:
+
+                if str(pacijent["ReceptPac"])!=str(receptpac):
+                    pozicijapacijenta=pozicijapacijenta+1
+                else:
+                    break
+            else:
+                pozicijapacijenta=pozicijapacijenta+1
+
+        pozicijalekara=1
+        for lekar in ucitaj_lekara():
+            if 'ReceptLekar' in lekar:
+                if lekar["ReceptLekar"]!=receptlekar:
+                    pozicijalekara=pozicijalekara+1
+                else:
+                    break
+            else:
+                pozicijalekara=pozicijalekara+1
+        pozicijalek=1
+        for lek in ucitaj_lek():
+            if 'ReceptLek' in lek:
+                if lek["ReceptLek"]!=receptlek:
+                    pozicijalek=pozicijalek+1
+                else:
+                    break
+            else:
+                pozicijalek=pozicijalek+1
 
 
 
 
+
+
+
+        self.prozor1 = Tk()
+        prozor1 = self.prozor1
+        prozor1.title("Izmena")
+        prozor1.geometry("700x400")
+        self.okvir = Frame(prozor1)
+        self.okvir.pack()
+
+        unosFrame = Frame(self.prozor1, bd=1, relief="solid", bg="LightBlue1")
+        unosFrame.place(x=0, y=0, width=700, height=400)
+
+        self.dugme = Button(unosFrame, text='Izlaz', width=15, command=self.izlaz2)
+        self.dugme.place(x=250, y=310)
+
+        self.dugme2 = Button(unosFrame, text='Sacuvaj', width=15, command=self.cuvanje_izmene)
+        self.dugme2.place(x=500, y=150)
+
+        self.labela = Label(unosFrame, text='Odaberite pacijenta', bg='white', font=("arial", 12))
+        self.labela.place(x=20, y=50)
+        self.labela2 = Label(unosFrame, text='Odaberite lekara', bg='white', font=("arial", 12))
+        self.labela2.place(x=20, y=90)
+        self.labela3 = Label(unosFrame, text='Odaberite lek', bg='white', font=("arial", 12))
+        self.labela3.place(x=20, y=130)
+        self.labela4 = Label(unosFrame, text='Odaberite kolicinu leka', bg='white', font=("arial", 12))
+        self.labela4.place(x=20, y=170)
+
+        self.labela5 = Label(unosFrame, text='Izvestaj', bg='white', font=("arial", 12))
+        self.labela5.place(x=20, y=210)
+        self.labela5entry = Entry(unosFrame, bg='white', width=30)
+        self.labela5entry.place(x=200, y=210)
+        self.labela5entry.insert(-1,self.Izvestaj)
+
+        self.vaznanapomena=Label(unosFrame,text='***Ukoliko ne zelite da promenite odredjen podatak,***'
+                                                '\n potvrdite ga pritiskom na vec odabran podatak',font=('arial',13))
+        self.vaznanapomena.place(x=130,y=0)
+
+        self.comboboxpacijent = ttk.Combobox(unosFrame, values=ucitaj_pacijente(), width=30, state='readonly')
+        self.comboboxpacijent.place(x=200, y=50)
+        self.comboboxpacijent.bind("<<ComboboxSelected>>", self.combopacijent)
+        self.comboboxpacijent.current(pozicijapacijenta-1)
+
+        self.comboboxlekar = ttk.Combobox(unosFrame, values=ucitaj_lekara(), width=30, state='readonly')
+        self.comboboxlekar.place(x=200, y=90)
+        self.comboboxlekar.bind("<<ComboboxSelected>>", self.combolekar)
+        self.comboboxlekar.current(pozicijalekara-1)
+
+        self.comboboxlek = ttk.Combobox(unosFrame, values=ucitaj_lek(), width=30, state='readonly')
+        self.comboboxlek.place(x=200, y=130)
+        self.comboboxlek.bind("<<ComboboxSelected>>", self.combolek)
+        self.comboboxlek.current(pozicijalek-1)
+        kolicina = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        self.comboboxkolicina = ttk.Combobox(unosFrame, values=kolicina, width=30, state='readonly')
+        self.comboboxkolicina.place(x=200, y=170)
+        self.comboboxkolicina.bind("<<ComboboxSelected>>", self.combokolicina)
+        self.comboboxkolicina.current(Kolicina-1)
 
 
 
@@ -1863,10 +2156,14 @@ class prozor_recepti:
         self.dodaj_dugme4=Button(unosFrame,text='Obrisi',width=15,command=self.obrisi)
         self.dodaj_dugme4.place(x=450 , y=230)
 
+        self.dodaj_dugme6=Button(unosFrame,text='Izmena',width=15,command=self.izmena_recepta)
+        self.dodaj_dugme6.place(x=450,y=500)
+
         self.dodaj_dugme1=Button(unosFrame,text='Dodaj',width=15,command=self.dodaj)
         self.dodaj_dugme1.place(x=650,y=500)
         self.dodaj_dugme3['state']='disable'
         self.dodaj_dugme4['state']='disable'
+        self.dodaj_dugme6['state']='disable'
 
 
         self.labela=Label(unosFrame,text='Odaberite pacijenta',bg='peach puff3',font=("arial", 12))
